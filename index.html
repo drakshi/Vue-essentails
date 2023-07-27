@@ -1,0 +1,89 @@
+<!DOCTYPE  html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toodole - A Simple Todo List App</title>
+    <link rel="stylesheet" href="style.css">
+ </head>
+  <body>
+        <div id="app" class="container" >
+        <h3 class="container-header">TODO List</h3>
+        <form class="form-container">
+            <div class="inline-add-task">
+            <input type="text" class="task-input" placeholder="Add new task" v-model="newItem"/>
+            <button class="submit-task" @click.prevent="addItem"></button>
+            </div>
+        </form>
+
+        <ul class="list-display" v-if ='items.length > 0' >
+            <li class="task-list-item" v-for="item in items" >
+                <label class="task-list-item-label" >
+                  <input type="checkbox" @click="(item) => item.complete != item.complete" v-model="item.complete">
+                  <span v-if="!item.isEditing">{{ item.name }}</span>
+                  <input v-else class="edit-input" type="text" v-model = 'item.name' @blur="item.isEditing = false" @keydown.enter="item.isEditing = false"/>
+                </label>
+                <div class="button_container">
+                <span class="edit-btn" @click.prevent="item.isEditing = !item.isEditing"></span>
+                <span class="delete-btn" @click.prevent='deleteItem(item.id)' title="Delete Task"></span>
+                </div>
+            </li>
+        </ul>
+        <div v-else class="empty-message"> No records found.</div>
+    </div>
+    <div id="content"></div>
+
+<script src="https://unpkg.com/vue@2"></script>
+
+
+    <script>
+        new Vue({
+            el : '#app',
+            data: {
+                newItem: '',
+                items:[
+                    {
+                        id: 1,
+                        name: "Car wash",
+                        complete: false,
+                        isEditing: false,
+                    },
+                    {
+                        id: 2,
+                        name: "Bill payment",
+                        complete:false,
+                        isEditing: false
+                    },
+                    {
+                        id: 3,
+                        name: "Go for walk",
+                        complete:false,
+                        isEditing: false
+                    }
+                ]
+            },
+            
+            methods: {
+                addItem: function() {
+                    this.items.push({
+                        id: this.items.length + 1,
+                        name: this.newItem,
+                        complete: false,
+                        isEditing: false
+                    });
+                    this.newItem = '';
+                    console.log(items);
+                },
+                deleteItem: function(itemId){
+                    this.items = this.items.filter((item) => item.id !== itemId )
+                },
+                updateItem: function(e,itemId){
+                    itemId.title = e.target.innerText;
+                    e.target.blur();
+                }
+            },
+            
+        });
+    </script>
+  </body>
+</html>
